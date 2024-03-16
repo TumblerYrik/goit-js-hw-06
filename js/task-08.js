@@ -1,24 +1,26 @@
-const loginForm = document.querySelector(".login-form");
+const form = document.querySelector(".login-form");
 
-loginForm.addEventListener("submit", (event) => {
+form.addEventListener("submit", (event) => {
     event.preventDefault();
 
-    const formData = new FormData(event.target);
-    const formObject = {};
+    const elements = event.currentTarget.elements;
+    const values = {};
 
-    formData.forEach((value, key) => {
-        formObject[key] = value;
-    });
-
-    const isEmpty = Object.values(formObject).some(
-        (value) => value.trim() === ""
-    );
-    if (isEmpty) {
-        alert("All fields must be filled in.");
-        return;
+    for (let i = 0; i < elements.length; i++) {
+        const element = elements[i];
+        if (element.tagName === "INPUT") {
+            values[element.name] = element.value;
+        }
     }
 
-    console.log(formObject);
+    const allFieldsFilled = Object.values(values).every(
+        (value) => value.trim() !== ""
+    );
 
-    event.target.reset();
+    if (allFieldsFilled) {
+        console.log(values);
+        form.reset();
+    } else {
+        alert("All fields must be filled in!");
+    }
 });
